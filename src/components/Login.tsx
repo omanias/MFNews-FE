@@ -1,23 +1,26 @@
 import React from 'react';
 import { Form, Input, Button, Typography, Card, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { login } from '../services/authService';
 
 const { Title } = Typography;
 
 const Login: React.FC = () => {
     const navigate = useNavigate();
-    const onFinish = (values: any) => {
-        const validUser = {
-            email: 'omar@mail.com',
-            password: '123456',
-        };
-        if (
-            values.usuario === validUser.email &&
-            values.password === validUser.password
-        ) {
+    const onFinish = async (values: any) => {
+        try {
+            const response = await login({
+                email: values.usuario,
+                password: values.password
+            });
+
+            // Store the token in localStorage
+            localStorage.setItem('token', response.token);
+            localStorage.setItem('user', JSON.stringify(response.user));
+
             message.success('¡Bienvenido!');
             setTimeout(() => navigate('/'), 1000);
-        } else {
+        } catch (error) {
             message.error('Usuario o contraseña incorrectos');
         }
     };
