@@ -1,10 +1,10 @@
-import axios from 'axios';
+import axiosInstance from './axiosConfig';
 
-const NEWS_API_URL = 'http://localhost:3000/api/news';
+const NEWS_API_URL = '/news';
 
 export const getNews = async () => {
     try {
-        const response = await axios.get(NEWS_API_URL);
+        const response = await axiosInstance.get(NEWS_API_URL);
         return response.data;
     } catch (error) {
         throw error;
@@ -13,7 +13,7 @@ export const getNews = async () => {
 
 export const createNews = async (data: any) => {
     try {
-        const response = await axios.post(NEWS_API_URL, data);
+        const response = await axiosInstance.post(NEWS_API_URL, data);
         return response.data;
     } catch (error) {
         throw error;
@@ -22,7 +22,7 @@ export const createNews = async (data: any) => {
 
 export const updateNews = async (id: string, data: any) => {
     try {
-        const response = await axios.put(`${NEWS_API_URL}/${id}`, data);
+        const response = await axiosInstance.put(`${NEWS_API_URL}/${id}`, data);
         return response.data;
     } catch (error) {
         throw error;
@@ -31,7 +31,7 @@ export const updateNews = async (id: string, data: any) => {
 
 export const deleteNews = async (id: string) => {
     try {
-        const response = await axios.delete(`${NEWS_API_URL}/${id}`);
+        const response = await axiosInstance.delete(`${NEWS_API_URL}/${id}`);
         return response.data;
     } catch (error) {
         throw error;

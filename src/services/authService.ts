@@ -1,6 +1,6 @@
-import axios from 'axios';
+import axiosInstance from './axiosConfig';
 
-const AUTH_API_URL = 'http://localhost:3000/api/users';
+const AUTH_API_URL = '/users';
 
 interface LoginCredentials {
     email: string;
@@ -18,7 +18,7 @@ interface LoginResponse {
 
 export const login = async (credentials: LoginCredentials): Promise<LoginResponse> => {
     try {
-        const response = await axios.post(`${AUTH_API_URL}/login`, credentials);
+        const response = await axiosInstance.post(`${AUTH_API_URL}/login`, credentials);
         return response.data;
     } catch (error) {
         throw error;

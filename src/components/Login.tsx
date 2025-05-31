@@ -14,9 +14,9 @@ const Login: React.FC = () => {
                 password: values.password
             });
 
-            // Store the token in localStorage
-            localStorage.setItem('token', response.token);
-            localStorage.setItem('user', JSON.stringify(response.user));
+            // Store the token in sessionStorage
+            sessionStorage.setItem('token', response.token);
+            sessionStorage.setItem('user', JSON.stringify(response.user));
 
             message.success('¡Bienvenido!');
             setTimeout(() => navigate('/'), 1000);

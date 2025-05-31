@@ -26,6 +26,9 @@ const NewsDetails: React.FC = () => {
     const [editVisible, setEditVisible] = useState(false);
     const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
+    const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+    const isAdmin = user.role === 'admin';
+
     useEffect(() => {
         const fetchNews = async () => {
             try {
@@ -112,65 +115,40 @@ const NewsDetails: React.FC = () => {
                 {news.body}
             </Text>
 
-            <div style={{ marginTop: 40, textAlign: 'left', display: 'flex', gap: 16 }}>
+            <div style={{ marginTop: 32, display: 'flex', gap: 16 }}>
+                {isAdmin && (
+                    <>
+                        <Button type="primary" onClick={() => setEditVisible(true)} style={{ background: '#c4120a' }}>
+                            Editar
+                        </Button>
+                        <Button danger onClick={handleDelete}>
+                            Eliminar
+                        </Button>
+                    </>
+                )}
                 <Button
+                    type="default"
                     icon={<ArrowLeftOutlined />}
                     onClick={() => navigate(-1)}
-                    style={{
-                        background: '#c4120a',
-                        color: 'white',
-                        fontWeight: 'bold',
-                        border: 'none'
-                    }}
                 >
                     Volver
-                </Button>
-                <Button
-                    type="primary"
-                    style={{
-                        background: '#f26522',
-                        color: 'white',
-                        fontWeight: 'bold',
-                        border: 'none'
-                    }}
-                    onClick={() => setEditVisible(true)}
-                >
-                    Editar
-                </Button>
-                <Button
-                    type="primary"
-                    danger
-                    style={{
-                        fontWeight: 'bold',
-                        border: 'none'
-                    }}
-                    onClick={handleDelete}
-                >
-                    Eliminar
                 </Button>
             </div>
             <EditModal
                 visible={editVisible}
                 onClose={() => setEditVisible(false)}
-                initialValues={{
-                    url: news.image_url,
-                    autor: news.author,
-                    titulo: news.title,
-                    subtitulo: news.subtitle,
-                    descripcion: news.body
-                }}
                 onSave={handleEditSave}
+                news={news}
             />
             <Modal
                 open={deleteModalVisible}
-                onCancel={() => setDeleteModalVisible(false)}
                 onOk={confirmDelete}
+                onCancel={() => setDeleteModalVisible(false)}
                 okText="Eliminar"
-                okType="danger"
+                okButtonProps={{ danger: true }}
                 cancelText="Cancelar"
-                title="¿Estás seguro que deseas eliminar esta noticia?"
             >
-                Esta acción no se puede deshacer.
+                ¿Estás seguro de que deseas eliminar esta noticia?
             </Modal>
         </div>
     );

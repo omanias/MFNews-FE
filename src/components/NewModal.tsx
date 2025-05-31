@@ -18,12 +18,20 @@ const NewModal: React.FC<NewModalProps> = ({ visible, onClose, onNewsCreated }) 
     const [successVisible, setSuccessVisible] = useState(false);
     const navigate = useNavigate();
 
+    const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+    const isAdmin = user.role === 'admin';
+
     const handleCancel = () => {
         onClose();
         form.resetFields();
     };
 
     const handleOk = async (values: any) => {
+        if (!isAdmin) {
+            message.error('Solo los administradores pueden crear noticias');
+            onClose();
+            return;
+        }
         try {
             setLoading(true);
             await createNews({
