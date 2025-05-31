@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Modal, Form, Input, Button, Typography, message } from 'antd';
+import { Modal, Form, Input, Button, Typography, message, Upload } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 import { createNews } from '../services/newsService';
 import { useNavigate } from 'react-router-dom';
 import SuccessModal from './SuccessModal';
+import type { UploadFile, RcFile } from 'antd/es/upload/interface';
 
 const { Title, Text } = Typography;
 
@@ -16,6 +18,7 @@ const NewModal: React.FC<NewModalProps> = ({ visible, onClose, onNewsCreated }) 
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
     const [successVisible, setSuccessVisible] = useState(false);
+    const [fileList, setFileList] = useState<UploadFile[]>([]);
     const navigate = useNavigate();
 
     const user = JSON.parse(sessionStorage.getItem('user') || '{}');
@@ -24,6 +27,7 @@ const NewModal: React.FC<NewModalProps> = ({ visible, onClose, onNewsCreated }) 
     const handleCancel = () => {
         onClose();
         form.resetFields();
+        setFileList([]);
     };
 
     const handleOk = async (values: any) => {
@@ -32,17 +36,28 @@ const NewModal: React.FC<NewModalProps> = ({ visible, onClose, onNewsCreated }) 
             onClose();
             return;
         }
+
+        if (fileList.length === 0) {
+            message.error('Por favor suba una imagen');
+            return;
+        }
+
         try {
             setLoading(true);
+            // Here you would typically upload the image to your server/storage
+            // and get back the URL. For now, we'll use a placeholder
+            const imageUrl = URL.createObjectURL(fileList[0].originFileObj as Blob);
+
             await createNews({
                 title: values.titulo,
                 subtitle: values.subtitulo,
                 body: values.descripcion,
-                image_url: values.url,
+                image_url: imageUrl,
                 author: values.autor,
                 date: new Date().toISOString()
             });
             form.resetFields();
+            setFileList([]);
             onClose();
             if (onNewsCreated) onNewsCreated();
             setSuccessVisible(true);
@@ -51,6 +66,34 @@ const NewModal: React.FC<NewModalProps> = ({ visible, onClose, onNewsCreated }) 
         } finally {
             setLoading(false);
         }
+    };
+
+    const uploadProps = {
+        onRemove: () => {
+            setFileList([]);
+        },
+        beforeUpload: (file: RcFile) => {
+            const isImage = file.type.startsWith('image/');
+            if (!isImage) {
+                message.error('Solo se pueden subir archivos de imagen!');
+                return false;
+            }
+            const isLt2M = file.size / 1024 / 1024 < 2;
+            if (!isLt2M) {
+                message.error('La imagen debe ser menor a 2MB!');
+                return false;
+            }
+            setFileList([{
+                uid: file.uid,
+                name: file.name,
+                status: 'done',
+                url: URL.createObjectURL(file),
+                originFileObj: file
+            }]);
+            return false;
+        },
+        fileList,
+        maxCount: 1,
     };
 
     return (
@@ -95,11 +138,13 @@ const NewModal: React.FC<NewModalProps> = ({ visible, onClose, onNewsCreated }) 
                         <Input.TextArea rows={4} placeholder="Ingrese la descripción" />
                     </Form.Item>
                     <Form.Item
-                        name="url"
-                        label="URL de la imagen"
-                        rules={[{ required: true, message: 'Por favor ingrese la URL de la imagen' }]}
+                        label="Imagen"
+                        required
+                        tooltip="Sube una imagen para la noticia (máximo 2MB)"
                     >
-                        <Input placeholder="Ingrese la URL de la imagen" />
+                        <Upload {...uploadProps} listType="picture">
+                            <Button icon={<UploadOutlined />}>Subir imagen</Button>
+                        </Upload>
                     </Form.Item>
                     <Form.Item
                         name="autor"
