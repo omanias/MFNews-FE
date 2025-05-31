@@ -38,15 +38,16 @@ const NavBar: React.FC<NavBarProps> = ({ onNew, onSearch }) => {
                         placeholder="Buscar noticias..."
                         allowClear
                         onSearch={onSearch}
-                        style={{ width: 300 }}
+                        style={{ width: '40vw', minWidth: 120, maxWidth: 300 }}
                     />
                     {isAdmin && (
                         <Button
                             type="primary"
-                            style={{ background: 'white', color: '#c4120a', fontWeight: 'bold' }}
+                            className="new-news-btn"
                             onClick={onNew}
                         >
-                            Nueva Noticia
+                            <span className="btn-text">Nueva Noticia</span>
+                            <span className="btn-plus">+</span>
                         </Button>
                     )}
                     <LogoutOutlined
@@ -56,6 +57,44 @@ const NavBar: React.FC<NavBarProps> = ({ onNew, onSearch }) => {
                     />
                 </div>
             </Header>
+            <style>{`
+                @media (max-width: 600px) {
+                    .new-news-btn {
+                        padding: 0 10px !important;
+                        font-size: 22px !important;
+                        min-width: 36px;
+                        height: 32px;
+                        background: white !important;
+                        color: #c4120a !important;
+                        border: none !important;
+                        border-radius: 8px !important;
+                        box-shadow: none !important;
+                        font-weight: bold;
+                    }
+                    .new-news-btn .btn-text {
+                        display: none;
+                    }
+                    .new-news-btn .btn-plus {
+                        display: inline;
+                    }
+                }
+                @media (min-width: 601px) {
+                    .new-news-btn {
+                        background: white !important;
+                        color: #c4120a !important;
+                        border: none !important;
+                        border-radius: 8px !important;
+                        box-shadow: none !important;
+                        font-weight: bold;
+                    }
+                    .new-news-btn .btn-text {
+                        display: inline;
+                    }
+                    .new-news-btn .btn-plus {
+                        display: none;
+                    }
+                }
+            `}</style>
         </Layout>
     );
 };

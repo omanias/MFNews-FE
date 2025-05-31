@@ -1,5 +1,7 @@
-import React, { useEffect } from 'react';
-import { Modal, Form, Input, Button, Typography } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Modal, Form, Input, Button, Typography, Upload, message } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
+import type { UploadFile, RcFile } from 'antd/es/upload/interface';
 
 const { Title, Text } = Typography;
 
@@ -18,22 +20,75 @@ interface EditModalProps {
 
 const EditModal: React.FC<EditModalProps> = ({ visible, onClose, initialValues, onSave }) => {
     const [form] = Form.useForm();
+    const [fileList, setFileList] = useState<UploadFile[]>([]);
 
     useEffect(() => {
         if (visible) {
             form.setFieldsValue(initialValues);
+            // Si hay una URL inicial, la mostramos como una imagen precargada
+            if (initialValues.url) {
+                setFileList([{
+                    uid: '-1',
+                    name: 'imagen-actual',
+                    status: 'done',
+                    url: initialValues.url
+                }]);
+            }
         }
     }, [visible, initialValues, form]);
 
     const handleCancel = () => {
         onClose();
         form.resetFields();
+        setFileList([]);
     };
 
     const handleOk = (values: any) => {
-        onSave(values);
+        if (fileList.length === 0) {
+            message.error('Por favor suba una imagen');
+            return;
+        }
+
+        // Si hay un nuevo archivo, usamos su URL, sino mantenemos la URL original
+        const imageUrl = fileList[0].originFileObj
+            ? URL.createObjectURL(fileList[0].originFileObj as Blob)
+            : initialValues.url;
+
+        onSave({
+            ...values,
+            url: imageUrl
+        });
         form.resetFields();
+        setFileList([]);
         onClose();
+    };
+
+    const uploadProps = {
+        onRemove: () => {
+            setFileList([]);
+        },
+        beforeUpload: (file: RcFile) => {
+            const isImage = file.type.startsWith('image/');
+            if (!isImage) {
+                message.error('Solo se pueden subir archivos de imagen!');
+                return false;
+            }
+            const isLt2M = file.size / 1024 / 1024 < 2;
+            if (!isLt2M) {
+                message.error('La imagen debe ser menor a 2MB!');
+                return false;
+            }
+            setFileList([{
+                uid: file.uid,
+                name: file.name,
+                status: 'done',
+                url: URL.createObjectURL(file),
+                originFileObj: file
+            }]);
+            return false;
+        },
+        fileList,
+        maxCount: 1,
     };
 
     return (
@@ -55,8 +110,14 @@ const EditModal: React.FC<EditModalProps> = ({ visible, onClose, initialValues, 
                 layout="vertical"
                 onFinish={handleOk}
             >
-                <Form.Item label="Url" name="url" rules={[{ required: true, message: 'Ingrese la URL' }]}>
-                    <Input />
+                <Form.Item
+                    label="Imagen"
+                    required
+                    tooltip="Sube una imagen para la noticia (máximo 2MB)"
+                >
+                    <Upload {...uploadProps} listType="picture">
+                        <Button icon={<UploadOutlined />}>Subir imagen</Button>
+                    </Upload>
                 </Form.Item>
                 <Form.Item label="Autor" name="autor" rules={[{ required: true, message: 'Ingrese el autor' }]}>
                     <Input />
