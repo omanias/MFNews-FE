@@ -48,6 +48,8 @@ const AppContent: React.FC = () => {
     return <Login />;
   }
 
+  if (loading) return <div>Cargando...</div>;
+
   return (
     <>
       <NavBar onNew={() => setModalVisible(true)} onSearch={handleSearch} />
@@ -57,7 +59,6 @@ const AppContent: React.FC = () => {
             news={news}
             loading={loading}
             error={error}
-            fetchData={fetchData}
             searchQuery={searchQuery}
           />
         } />

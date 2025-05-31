@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Modal, Form, Input, Button, Typography, message, Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { createNews } from '../services/newsService';
-import { useNavigate } from 'react-router-dom';
 import SuccessModal from './SuccessModal';
 import type { UploadFile, RcFile } from 'antd/es/upload/interface';
 
@@ -19,7 +18,6 @@ const NewModal: React.FC<NewModalProps> = ({ visible, onClose, onNewsCreated }) 
     const [loading, setLoading] = useState(false);
     const [successVisible, setSuccessVisible] = useState(false);
     const [fileList, setFileList] = useState<UploadFile[]>([]);
-    const navigate = useNavigate();
 
     const user = JSON.parse(sessionStorage.getItem('user') || '{}');
     const isAdmin = user.role === 'admin';

@@ -138,7 +138,13 @@ const NewsDetails: React.FC = () => {
                 visible={editVisible}
                 onClose={() => setEditVisible(false)}
                 onSave={handleEditSave}
-                news={news}
+                initialValues={{
+                    url: news.image_url,
+                    autor: news.author,
+                    titulo: news.title,
+                    subtitulo: news.subtitle,
+                    descripcion: news.body
+                }}
             />
             <Modal
                 open={deleteModalVisible}

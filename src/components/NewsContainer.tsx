@@ -19,11 +19,10 @@ interface NewsContainerProps {
     news: NewsItem[];
     loading: boolean;
     error: string | null;
-    fetchData: () => void;
     searchQuery?: string;
 }
 
-const NewsContainer: React.FC<NewsContainerProps> = ({ news, loading, error, fetchData, searchQuery }) => {
+const NewsContainer: React.FC<NewsContainerProps> = ({ news, loading, error, searchQuery }) => {
     const [searchResults, setSearchResults] = useState<NewsItem[]>([]);
     const [searchLoading, setSearchLoading] = useState(false);
     const [searchError, setSearchError] = useState<string | null>(null);
