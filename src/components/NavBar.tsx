@@ -1,13 +1,28 @@
-import React, { useState } from 'react';
-import { Layout, Button, Typography } from 'antd';
+import React from 'react';
+import { Layout, Button, Typography, Modal } from 'antd';
 import { LogoutOutlined } from '@ant-design/icons';
-import NewModal from './NewModal';
 
 const { Header } = Layout;
 const { Title } = Typography;
 
-const NavBar: React.FC = () => {
-    const [modalVisible, setModalVisible] = useState(false);
+interface NavBarProps {
+    onNew: () => void;
+}
+
+const NavBar: React.FC<NavBarProps> = ({ onNew }) => {
+    const handleLogout = () => {
+        Modal.confirm({
+            title: '¿Deseas cerrar sesión?',
+            content: 'Tendrás que volver a iniciar sesión para acceder nuevamente.',
+            okText: 'Salir',
+            okType: 'danger',
+            cancelText: 'Cancelar',
+            onOk: () => {
+                localStorage.clear();
+                window.location.href = '/login';
+            },
+        });
+    };
 
     return (
         <Layout>
@@ -17,14 +32,17 @@ const NavBar: React.FC = () => {
                     <Button
                         type="primary"
                         style={{ background: 'white', color: '#c4120a', fontWeight: 'bold' }}
-                        onClick={() => setModalVisible(true)}
+                        onClick={onNew}
                     >
                         Nueva Noticia
                     </Button>
-                    <LogoutOutlined style={{ color: 'white', fontSize: 22, cursor: 'pointer' }} title="Cerrar sesión" />
+                    <LogoutOutlined
+                        style={{ color: 'white', fontSize: 22, cursor: 'pointer' }}
+                        title="Cerrar sesión"
+                        onClick={handleLogout}
+                    />
                 </div>
             </Header>
-            {modalVisible && <NewModal visible={modalVisible} onClose={() => setModalVisible(false)} />}
         </Layout>
     );
 };

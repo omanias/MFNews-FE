@@ -1,43 +1,50 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Spinner from './Spinner';
-import { Card, Typography, Alert } from 'antd';
-import { getNews } from '../services/newsService';
+import { Typography, Alert } from 'antd';
+import NewsCard from './NewsCard';
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 interface NewsItem {
     id: string;
-    titulo: string;
-    autor: string;
-    descripcion: string;
+    title: string;
+    subtitle?: string;
+    image_url: string;
+    author: string;
+    date: string;
 }
 
-const NewsContainer: React.FC = () => {
-    const [news, setNews] = useState<NewsItem[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+interface NewsContainerProps {
+    news: NewsItem[];
+    loading: boolean;
+    error: string | null;
+    fetchData: () => void;
+}
 
-    useEffect(() => {
-        setLoading(true);
-        setError(null);
-        getNews()
-            .then(setNews)
-            .catch(err => setError(err.message))
-            .finally(() => setLoading(false));
-    }, []);
-
+const NewsContainer: React.FC<NewsContainerProps> = ({ news, loading, error }) => {
     if (loading) return <div style={{ textAlign: 'center', marginTop: 40 }}><Spinner size={48} /></div>;
     if (error) return <Alert type="error" message="Error" description={error} showIcon style={{ margin: 32 }} />;
     if (!news.length) return <Text type="secondary" style={{ display: 'block', textAlign: 'center', margin: 32 }}>No hay noticias disponibles.</Text>;
 
     return (
-        <div style={{ maxWidth: 700, margin: '32px auto', display: 'flex', flexDirection: 'column', gap: 20 }}>
+        <div style={{
+            maxWidth: 1200,
+            margin: '32px auto',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+            gap: 24,
+            padding: '0 16px'
+        }}>
             {news.map(n => (
-                <Card key={n.id}>
-                    <Title level={5}>{n.titulo}</Title>
-                    <Text type="secondary">Por {n.autor}</Text>
-                    <div style={{ marginTop: 8 }}>{n.descripcion}</div>
-                </Card>
+                <NewsCard
+                    key={n.id}
+                    id={n.id}
+                    title={n.title}
+                    subtitle={n.subtitle}
+                    image_url={n.image_url}
+                    author={n.author}
+                    date={n.date}
+                />
             ))}
         </div>
     );

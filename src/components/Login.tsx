@@ -1,11 +1,25 @@
 import React from 'react';
-import { Form, Input, Button, Typography, Card } from 'antd';
+import { Form, Input, Button, Typography, Card, message } from 'antd';
+import { useNavigate } from 'react-router-dom';
 
 const { Title } = Typography;
 
 const Login: React.FC = () => {
+    const navigate = useNavigate();
     const onFinish = (values: any) => {
-        console.log('Login:', values);
+        const validUser = {
+            email: 'omar@mail.com',
+            password: '123456',
+        };
+        if (
+            values.usuario === validUser.email &&
+            values.password === validUser.password
+        ) {
+            message.success('¡Bienvenido!');
+            setTimeout(() => navigate('/'), 1000);
+        } else {
+            message.error('Usuario o contraseña incorrectos');
+        }
     };
 
     return (
