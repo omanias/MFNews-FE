@@ -14,6 +14,7 @@ const AppContent: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const location = useLocation();
 
   const fetchData = async () => {
@@ -39,17 +40,26 @@ const AppContent: React.FC = () => {
     }
   }, [location.pathname]);
 
-  // Mostrar solo el login en la ruta /login
+  const handleSearch = (value: string) => {
+    setSearchQuery(value);
+  };
+
   if (location.pathname === '/login') {
     return <Login />;
   }
 
   return (
     <>
-      <NavBar onNew={() => setModalVisible(true)} />
+      <NavBar onNew={() => setModalVisible(true)} onSearch={handleSearch} />
       <Routes>
         <Route path="/" element={
-          <NewsContainer news={news} loading={loading} error={error} fetchData={fetchData} />
+          <NewsContainer
+            news={news}
+            loading={loading}
+            error={error}
+            fetchData={fetchData}
+            searchQuery={searchQuery}
+          />
         } />
         <Route path="/news/:id" element={<NewsDetails />} />
       </Routes>

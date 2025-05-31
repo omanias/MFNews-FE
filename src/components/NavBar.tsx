@@ -1,15 +1,17 @@
 import React from 'react';
-import { Layout, Button, Typography, Modal } from 'antd';
+import { Layout, Button, Typography, Modal, Input } from 'antd';
 import { LogoutOutlined } from '@ant-design/icons';
 
 const { Header } = Layout;
 const { Title } = Typography;
+const { Search } = Input;
 
 interface NavBarProps {
     onNew: () => void;
+    onSearch?: (value: string) => void;
 }
 
-const NavBar: React.FC<NavBarProps> = ({ onNew }) => {
+const NavBar: React.FC<NavBarProps> = ({ onNew, onSearch }) => {
     const handleLogout = () => {
         Modal.confirm({
             title: '¿Deseas cerrar sesión?',
@@ -32,6 +34,12 @@ const NavBar: React.FC<NavBarProps> = ({ onNew }) => {
             <Header style={{ background: '#c4120a', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 40px' }}>
                 <Title level={3} style={{ color: 'white', margin: 0 }}>MFNews</Title>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                    <Search
+                        placeholder="Buscar noticias..."
+                        allowClear
+                        onSearch={onSearch}
+                        style={{ width: 300 }}
+                    />
                     {isAdmin && (
                         <Button
                             type="primary"

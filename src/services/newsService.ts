@@ -11,6 +11,17 @@ export const getNews = async () => {
     }
 };
 
+export const searchNews = async (query: string) => {
+    try {
+        const response = await axiosInstance.get(`${NEWS_API_URL}/search`, {
+            params: { q: query }
+        });
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 export const createNews = async (data: any) => {
     try {
         const response = await axiosInstance.post(NEWS_API_URL, data);

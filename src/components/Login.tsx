@@ -14,7 +14,6 @@ const Login: React.FC = () => {
                 password: values.password
             });
 
-            // Store the token in sessionStorage
             sessionStorage.setItem('token', response.token);
             sessionStorage.setItem('user', JSON.stringify(response.user));
 
