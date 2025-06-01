@@ -15,7 +15,7 @@ interface EditModalProps {
         subtitulo?: string;
         descripcion?: string;
     };
-    onSave: (values: any) => void;
+    onSave: (values: any, imageFile?: File) => void;
 }
 
 const EditModal: React.FC<EditModalProps> = ({ visible, onClose, initialValues, onSave }) => {
@@ -25,7 +25,6 @@ const EditModal: React.FC<EditModalProps> = ({ visible, onClose, initialValues, 
     useEffect(() => {
         if (visible) {
             form.setFieldsValue(initialValues);
-            // Si hay una URL inicial, la mostramos como una imagen precargada
             if (initialValues.url) {
                 setFileList([{
                     uid: '-1',
@@ -49,15 +48,13 @@ const EditModal: React.FC<EditModalProps> = ({ visible, onClose, initialValues, 
             return;
         }
 
-        // Si hay un nuevo archivo, usamos su URL, sino mantenemos la URL original
-        const imageUrl = fileList[0].originFileObj
-            ? URL.createObjectURL(fileList[0].originFileObj as Blob)
-            : initialValues.url;
+        const imageFile = fileList[0].originFileObj as File | undefined;
 
         onSave({
             ...values,
-            url: imageUrl
-        });
+            url: initialValues.url
+        }, imageFile);
+
         form.resetFields();
         setFileList([]);
         onClose();
@@ -131,14 +128,14 @@ const EditModal: React.FC<EditModalProps> = ({ visible, onClose, initialValues, 
                 <Form.Item label="Descripción" name="descripcion">
                     <Input.TextArea rows={3} />
                 </Form.Item>
-                <Form.Item style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 0 }}>
-                    <Button onClick={handleCancel} style={{ background: '#f5f5f5', color: '#c4120a', border: 'none', fontWeight: 'bold', width: 120 }}>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 24 }}>
+                    <Button onClick={handleCancel}>
                         Cancelar
                     </Button>
-                    <Button htmlType="submit" style={{ background: '#f26522', color: 'white', fontWeight: 'bold', border: 'none', width: 120 }}>
+                    <Button type="primary" htmlType="submit" style={{ background: '#c4120a' }}>
                         Guardar
                     </Button>
-                </Form.Item>
+                </div>
             </Form>
         </Modal>
     );

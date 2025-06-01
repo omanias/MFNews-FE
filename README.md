@@ -17,6 +17,7 @@ MFNews is a modern news application built with React and TypeScript, providing a
 Before you begin, ensure you have the following installed:
 - Node.js (Latest LTS version recommended)
 - npm or yarn
+- LocalStack (for local S3 storage)
 
 ## 🛠️ Installation
 
@@ -105,6 +106,16 @@ yarn lint
 - Image upload support with preview
 - Responsive image handling
 - Search functionality for news articles
+- Image storage using LocalStack (S3)
+
+### Image Handling
+- Support for image uploads up to 2MB
+- Image preview before upload
+- Automatic image optimization
+- Secure image storage in LocalStack
+- Support for common image formats (JPEG, PNG, GIF)
+- Responsive image display in news cards and details
+- Image caching and lazy loading
 
 ### User Management
 - User authentication and authorization
@@ -126,12 +137,14 @@ yarn lint
 - Secure authentication handling
 - Protected routes
 - Input validation and sanitization
+- Secure image upload handling
 
 ### Performance
 - Code splitting
 - Lazy loading of components
 - Optimized image handling
 - Efficient state management
+- Image compression and optimization
 
 ## 🔧 Configuration
 
@@ -146,3 +159,25 @@ VITE_APP_VERSION=0.0.0
 VITE_ENABLE_ANALYTICS=false
 VITE_ENABLE_LOGGING=true
 ```
+
+## 📸 Image Upload Process
+
+The application handles image uploads through the following process:
+
+1. **Frontend Validation**:
+   - Validates image type (must be an image file)
+   - Checks file size (max 2MB)
+   - Provides image preview
+   - Handles upload cancellation
+
+2. **Upload Process**:
+   - Images are sent to the backend using FormData
+   - Backend processes the image and uploads it to LocalStack
+   - Returns the permanent URL of the uploaded image
+   - URL is stored in the database with the news article
+
+3. **Image Display**:
+   - Images are displayed responsively in news cards and details
+   - Lazy loading is implemented for better performance
+   - Fallback handling for failed image loads
+   - Optimized image loading based on viewport size

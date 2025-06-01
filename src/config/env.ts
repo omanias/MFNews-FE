@@ -19,12 +19,10 @@ const defaultConfig: EnvConfig = {
 };
 
 const getEnvConfig = (): EnvConfig => {
-    // Check for Vite environment
     if (typeof window !== 'undefined' && (window as any).__vite_env__) {
         return (window as any).__vite_env__;
     }
 
-    // Check for Node environment
     if (typeof process !== 'undefined' && process.env) {
         return {
             ...defaultConfig,
@@ -35,7 +33,6 @@ const getEnvConfig = (): EnvConfig => {
     return defaultConfig;
 };
 
-// For development with Vite
 if (typeof window !== 'undefined') {
     (window as any).__vite_env__ = defaultConfig;
 }

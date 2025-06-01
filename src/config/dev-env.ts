@@ -1,6 +1,4 @@
-// This file is only used in development with Vite
 export const getDevEnv = () => {
-    // Skip import.meta in test environment
     if (process.env.NODE_ENV === 'test') {
         return null;
     }
@@ -18,7 +16,6 @@ export const getDevEnv = () => {
             };
         }
     } catch (error) {
-        // If import.meta is not available, return null
         return null;
     }
     return null;

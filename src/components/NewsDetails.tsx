@@ -54,15 +54,14 @@ const NewsDetails: React.FC = () => {
     if (error) return <Alert type="error" message="Error" description={error} showIcon style={{ margin: 32 }} />;
     if (!news) return <Alert type="warning" message="Noticia no encontrada" showIcon style={{ margin: 32 }} />;
 
-    const handleEditSave = async (values: any) => {
+    const handleEditSave = async (values: any, imageFile?: File) => {
         try {
             const updated = await updateNews(news.id, {
-                image_url: values.url,
                 author: values.autor,
                 title: values.titulo,
                 subtitle: values.subtitulo,
                 body: values.descripcion
-            });
+            }, imageFile);
             setNews(updated);
             message.success('Noticia actualizada correctamente');
         } catch (err) {

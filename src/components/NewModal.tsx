@@ -42,18 +42,16 @@ const NewModal: React.FC<NewModalProps> = ({ visible, onClose, onNewsCreated }) 
 
         try {
             setLoading(true);
-            // Here you would typically upload the image to your server/storage
-            // and get back the URL. For now, we'll use a placeholder
-            const imageUrl = URL.createObjectURL(fileList[0].originFileObj as Blob);
+            const imageFile = fileList[0].originFileObj as File;
 
             await createNews({
                 title: values.titulo,
                 subtitle: values.subtitulo,
                 body: values.descripcion,
-                image_url: imageUrl,
                 author: values.autor,
                 date: new Date().toISOString()
-            });
+            }, imageFile);
+
             form.resetFields();
             setFileList([]);
             onClose();
@@ -107,13 +105,12 @@ const NewModal: React.FC<NewModalProps> = ({ visible, onClose, onNewsCreated }) 
             >
                 <div style={{ textAlign: 'center', marginBottom: 12 }}>
                     <Title level={5} style={{ color: '#c4120a', marginBottom: 0 }}>Nueva Noticia</Title>
-                    <Text>Completar los siguientes datos.</Text>
+                    <Text>Complete los siguientes datos.</Text>
                 </div>
                 <Form
                     form={form}
-                    onFinish={handleOk}
                     layout="vertical"
-                    requiredMark={false}
+                    onFinish={handleOk}
                 >
                     <Form.Item
                         name="titulo"
