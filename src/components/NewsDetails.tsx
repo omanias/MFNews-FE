@@ -86,18 +86,22 @@ const NewsDetails: React.FC = () => {
 
     return (
         <div style={{ maxWidth: 800, margin: '32px auto', padding: '0 16px' }}>
-            <Image
-                src={news.image_url}
-                alt={news.title}
-                style={{ width: '100%', height: 400, objectFit: 'cover', marginBottom: 24 }}
-            />
-
             <Title level={2}>{news.title}</Title>
             {news.subtitle && (
                 <Title level={4} style={{ color: '#666', marginBottom: 24 }}>
                     {news.subtitle}
                 </Title>
             )}
+
+            <Image
+                src={news.image_url}
+                alt={news.title}
+                style={{ width: '100%', height: 400, objectFit: 'cover', marginBottom: 24 }}
+            />
+
+            <Text style={{ fontSize: 16, lineHeight: 1.8, display: 'block', marginBottom: 24 }}>
+                {news.body}
+            </Text>
 
             <div style={{ marginBottom: 24 }}>
                 <Text type="secondary">
@@ -109,10 +113,6 @@ const NewsDetails: React.FC = () => {
                     {new Date(news.date).toLocaleDateString()}
                 </Text>
             </div>
-
-            <Text style={{ fontSize: 16, lineHeight: 1.8 }}>
-                {news.body}
-            </Text>
 
             <div style={{ marginTop: 32, display: 'flex', gap: 16 }}>
                 {isAdmin && (
