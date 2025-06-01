@@ -1,34 +1,38 @@
 import '@testing-library/jest-dom';
-import { jest } from '@jest/globals';
-import { TextEncoder, TextDecoder } from 'util';
+import { vi } from 'vitest';
+import { testEnv } from './config/test-env';
 
-if (typeof global.TextEncoder === 'undefined') {
-    (global as any).TextEncoder = TextEncoder;
-}
-if (typeof global.TextDecoder === 'undefined') {
-    (global as any).TextDecoder = TextDecoder;
+// Set process.env
+process.env = {
+    ...process.env,
+    ...testEnv
+};
+
+// Mock window.__vite_env__
+if (typeof window !== 'undefined') {
+    (window as any).__vite_env__ = testEnv;
 }
 
 // Mock window.matchMedia
 Object.defineProperty(window, 'matchMedia', {
     writable: true,
-    value: jest.fn().mockImplementation((query: unknown) => ({
+    value: vi.fn().mockImplementation((query: unknown) => ({
         matches: false,
         media: query,
         onchange: null,
-        addListener: jest.fn(),
-        removeListener: jest.fn(),
-        addEventListener: jest.fn(),
-        removeEventListener: jest.fn(),
-        dispatchEvent: jest.fn(),
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
     })),
 });
 
 // Mock IntersectionObserver
 class MockIntersectionObserver {
-    observe = jest.fn();
-    unobserve = jest.fn();
-    disconnect = jest.fn();
+    observe = vi.fn();
+    unobserve = vi.fn();
+    disconnect = vi.fn();
 }
 
 Object.defineProperty(window, 'IntersectionObserver', {
@@ -38,9 +42,9 @@ Object.defineProperty(window, 'IntersectionObserver', {
 
 // Mock ResizeObserver
 class MockResizeObserver {
-    observe = jest.fn();
-    unobserve = jest.fn();
-    disconnect = jest.fn();
+    observe = vi.fn();
+    unobserve = vi.fn();
+    disconnect = vi.fn();
 }
 
 Object.defineProperty(window, 'ResizeObserver', {

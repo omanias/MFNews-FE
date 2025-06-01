@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import './App.css'
 import NavBar from './components/NavBar';
 import NewsContainer from './components/NewsContainer';
@@ -7,7 +7,10 @@ import NewsDetails from './components/NewsDetails';
 import Footer from './components/Footer';
 import NewModal from './components/NewModal';
 import Login from './components/Login';
+import CreateUser from './components/CreateUser';
+import UserManagement from './components/UserManagement';
 import { getNews } from './services/newsService';
+import { viteEnv } from './config/vite-env';
 
 const AppContent: React.FC = () => {
   const [news, setNews] = useState([]);
@@ -48,6 +51,13 @@ const AppContent: React.FC = () => {
     return <Login />;
   }
 
+  const user = JSON.parse(sessionStorage.getItem(viteEnv.VITE_USER_KEY) || '{}');
+  const isAdmin = user.role === 'admin';
+
+  if (location.pathname === '/create-user' && Object.keys(user).length > 0 && !isAdmin) {
+    return <Navigate to="/" replace />;
+  }
+
   if (loading) return <div>Cargando...</div>;
 
   return (
@@ -63,6 +73,8 @@ const AppContent: React.FC = () => {
           />
         } />
         <Route path="/news/:id" element={<NewsDetails />} />
+        <Route path="/create-user" element={<CreateUser />} />
+        <Route path="/user-management" element={<UserManagement />} />
       </Routes>
       <NewModal visible={modalVisible} onClose={() => setModalVisible(false)} onNewsCreated={fetchData} />
       <Footer />

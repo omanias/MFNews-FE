@@ -1,9 +1,9 @@
 import React from 'react';
 import { Form, Input, Button, Typography, Card, message } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { login } from '../services/authService';
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const Login: React.FC = () => {
     const navigate = useNavigate();
@@ -40,6 +40,12 @@ const Login: React.FC = () => {
                             Iniciar Sesión
                         </Button>
                     </Form.Item>
+                    <div style={{ textAlign: 'center' }}>
+                        <Text>¿No tienes una cuenta? </Text>
+                        <Link to="/create-user" style={{ color: '#c4120a', fontWeight: 'bold' }}>
+                            Crear cuenta
+                        </Link>
+                    </div>
                 </Form>
             </Card>
         </div>

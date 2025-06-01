@@ -1,12 +1,13 @@
 import axios from 'axios';
+import { viteEnv } from '../config/vite-env';
 
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost:3000/api'
+    baseURL: viteEnv.VITE_API_BASE_URL
 });
 
 axiosInstance.interceptors.request.use(
     (config) => {
-        const token = sessionStorage.getItem('token');
+        const token = sessionStorage.getItem(viteEnv.VITE_AUTH_TOKEN_KEY);
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }

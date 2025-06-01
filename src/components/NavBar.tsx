@@ -1,6 +1,7 @@
 import React from 'react';
 import { Layout, Button, Typography, Modal, Input } from 'antd';
-import { LogoutOutlined } from '@ant-design/icons';
+import { LogoutOutlined, TeamOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 
 const { Header } = Layout;
 const { Title } = Typography;
@@ -12,6 +13,8 @@ interface NavBarProps {
 }
 
 const NavBar: React.FC<NavBarProps> = ({ onNew, onSearch }) => {
+    const navigate = useNavigate();
+
     const handleLogout = () => {
         Modal.confirm({
             title: '¿Deseas cerrar sesión?',
@@ -31,24 +34,35 @@ const NavBar: React.FC<NavBarProps> = ({ onNew, onSearch }) => {
 
     return (
         <Layout>
-            <Header style={{ background: '#c4120a', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 40px' }}>
-                <Title level={3} style={{ color: 'white', margin: 0 }}>MFNews</Title>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <Header className="navbar-header">
+                <div className="navbar-title">
+                    <Title level={3} style={{ color: 'white', margin: 0 }}>MFNews</Title>
+                </div>
+                <div className="navbar-actions">
                     <Search
                         placeholder="Buscar noticias..."
                         allowClear
                         onSearch={onSearch}
-                        style={{ width: '40vw', minWidth: 120, maxWidth: 300 }}
+                        className="navbar-search"
                     />
                     {isAdmin && (
-                        <Button
-                            type="primary"
-                            className="new-news-btn"
-                            onClick={onNew}
-                        >
-                            <span className="btn-text">Nueva Noticia</span>
-                            <span className="btn-plus">+</span>
-                        </Button>
+                        <>
+                            <Button
+                                type="default"
+                                className="new-news-btn"
+                                onClick={onNew}
+                                style={{ background: '#fff', color: '#c4120a', border: '1px solid #c4120a', fontWeight: 'bold', borderRadius: 8, boxShadow: 'none' }}
+                            >
+                                <span className="btn-text">Nueva noticia</span>
+                                <span className="btn-plus">Nueva noticia</span>
+                            </Button>
+                            <Button
+                                type="default"
+                                icon={<TeamOutlined />}
+                                onClick={() => navigate('/user-management')}
+                                style={{ background: '#fff', color: '#c4120a', border: 'none' }}
+                            />
+                        </>
                     )}
                     <LogoutOutlined
                         style={{ color: 'white', fontSize: 22, cursor: 'pointer' }}
@@ -58,39 +72,64 @@ const NavBar: React.FC<NavBarProps> = ({ onNew, onSearch }) => {
                 </div>
             </Header>
             <style>{`
+                .navbar-header {
+                    background: #c4120a;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 0 40px;
+                }
+                .navbar-title {
+                    display: flex;
+                    align-items: center;
+                }
+                .navbar-actions {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                }
+                .navbar-search {
+                    width: 40vw;
+                    min-width: 120px;
+                    max-width: 300px;
+                }
                 @media (max-width: 600px) {
-                    .new-news-btn {
-                        padding: 0 10px !important;
-                        font-size: 22px !important;
-                        min-width: 36px;
-                        height: 32px;
-                        background: white !important;
-                        color: #c4120a !important;
-                        border: none !important;
-                        border-radius: 8px !important;
-                        box-shadow: none !important;
-                        font-weight: bold;
+                    .navbar-header {
+                        flex-direction: column;
+                        align-items: stretch;
+                        padding: 0 8px;
+                        height: auto;
                     }
-                    .new-news-btn .btn-text {
+                    .navbar-title {
+                        justify-content: center;
+                        margin-bottom: 4px;
+                    }
+                    .navbar-actions {
+                        flex-wrap: wrap;
+                        gap: 6px;
+                        justify-content: center;
+                    }
+                    .navbar-search {
+                        width: 100%;
+                        min-width: 0;
+                        max-width: 100vw;
+                    }
+                    .new-news-btn, .ant-btn, .btn-user-text {
+                        font-size: 14px !important;
+                        padding: 0 8px !important;
+                    }
+                    .btn-text {
                         display: none;
                     }
-                    .new-news-btn .btn-plus {
+                    .btn-plus {
                         display: inline;
                     }
                 }
                 @media (min-width: 601px) {
-                    .new-news-btn {
-                        background: white !important;
-                        color: #c4120a !important;
-                        border: none !important;
-                        border-radius: 8px !important;
-                        box-shadow: none !important;
-                        font-weight: bold;
-                    }
-                    .new-news-btn .btn-text {
+                    .btn-text {
                         display: inline;
                     }
-                    .new-news-btn .btn-plus {
+                    .btn-plus {
                         display: none;
                     }
                 }
