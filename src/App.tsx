@@ -47,11 +47,23 @@ const AppContent: React.FC = () => {
     setSearchQuery(value);
   };
 
+  const user = JSON.parse(sessionStorage.getItem(viteEnv.VITE_USER_KEY) || '{}');
+  const isAuthenticated = Object.keys(user).length > 0;
+
+  // Si no está autenticado y no está en la página de login o create-user, redirigir al login
+  if (!isAuthenticated && !['/login', '/create-user'].includes(location.pathname)) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // Si está autenticado y está en la página de login, redirigir al inicio
+  if (isAuthenticated && location.pathname === '/login') {
+    return <Navigate to="/" replace />;
+  }
+
   if (location.pathname === '/login') {
     return <Login />;
   }
 
-  const user = JSON.parse(sessionStorage.getItem(viteEnv.VITE_USER_KEY) || '{}');
   const isAdmin = user.role === 'admin';
 
   if (location.pathname === '/create-user' && Object.keys(user).length > 0 && !isAdmin) {

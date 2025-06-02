@@ -85,7 +85,7 @@ const NewsDetails: React.FC = () => {
     };
 
     return (
-        <div style={{ maxWidth: 800, margin: '32px auto', padding: '0 16px' }}>
+        <div style={{ maxWidth: 800, margin: '32px auto', padding: '0 16px', paddingBottom: 80 }}>
             <Title level={2}>{news.title}</Title>
             {news.subtitle && (
                 <Title level={4} style={{ color: '#666', marginBottom: 24 }}>
@@ -99,7 +99,7 @@ const NewsDetails: React.FC = () => {
                 style={{ width: '100%', height: 400, objectFit: 'cover', marginBottom: 24 }}
             />
 
-            <Text style={{ fontSize: 16, lineHeight: 1.8, display: 'block', marginBottom: 24 }}>
+            <Text style={{ fontSize: 16, lineHeight: 1.8, display: 'block', marginBottom: 24, textAlign: 'justify' }}>
                 {news.body}
             </Text>
 
